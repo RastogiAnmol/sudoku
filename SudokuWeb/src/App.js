@@ -1,24 +1,40 @@
-import React from 'react';
+﻿import React from 'react';
 import Grid from './components/Grid';
 import { solver, isSolvable, isComplete } from './utils/sudoku';
 import { solve, clear, undo } from './actions/grid';
 
 /* Application Container Component */
-class App extends React.Component {
+const App = React.createClass({
     componentDidMount() {
         this.unsubscribe = this.props.store.subscribe(() => {
             this.forceUpdate();
         })
-    }
+    },
     componentWillUnmount() {
         this.unsubscribe();
-    }
+    },
     render() {
         const { store } = this.props;
         const { grid, status } = store.getState();
         const { isSolved, isEdited } = status;
         return (
             <div>
+                <button
+                    className='undo'
+                    disabled={window.gridHistory && !window.gridHistory.length}
+                    onClick={() => store.dispatch(undo())}
+                >
+                    ⤺ Undo
+    </button>
+                <button
+                    className='clear'
+                    disabled={!isEdited}
+                    onClick={() => store.dispatch(clear())}
+                >
+                    ⟲ Clear
+    </button>
+
+                <Grid grid={grid} status={status} {...this.props} />
 
                 <button
                     className='check'
@@ -30,7 +46,7 @@ class App extends React.Component {
                             }
                             alert('This Sudoku is solvable, keep going !!');
                         } else {
-                            alert('This Sudoku is NOT solvable');
+                            alert('Fill properly');
                         }
                     }}
                 >
@@ -42,14 +58,10 @@ class App extends React.Component {
                 >
                     Solve
     </button>
-                <Grid grid={grid} status={status} {...this.props} />
-                <div className='footnote'>
-                    <h2>India is diverse and colorful.</h2>
-                </div>
             </div>
 
         );
     }
-}
+});
 
 export default App;

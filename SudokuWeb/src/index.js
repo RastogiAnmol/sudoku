@@ -6,13 +6,13 @@ import rootReducer from './reducers';
 import App from './App';
 
 const finalCreateStore = compose(
-	applyMiddleware(thunk),
-	window.devToolsExtension ? window.devToolsExtension() : f => f
+    applyMiddleware(thunk),
+    window.devToolsExtension ? window.devToolsExtension() : f => f
 )(createStore);
 
 const store = finalCreateStore(rootReducer);
 
 ReactDOM.render(
-	<App store={store} />,
-	document.getElementById('root')
+    <App store={store} />,
+    document.getElementById('root')
 );
