@@ -1,4 +1,22 @@
+# sudoku
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+
+# Type https://localhost:youPortNo/swagger/index.html and pass the below input in the request body 
+
+# Sample input
+                [ 
+                [ 3, 0, 1, 7, 5, 4, 6, 0, 8 ], 
+                [ 6, 0, 8, 2, 9, 3, 1, 5, 7 ], 
+                [ 5, 0, 9, 8, 0, 6, 2, 3, 4 ], 
+                [ 7, 0, 2, 3, 4, 5, 0, 6, 1 ], 
+                [ 9, 0, 5, 1, 8, 0, 4, 2, 3 ], 
+                [ 1, 0, 4, 9, 6, 2, 8, 7, 5 ], 
+                [ 8, 0, 3, 0, 2, 1, 7, 4, 6 ], 
+                [ 2, 0, 6, 4, 7, 8, 0, 1, 9 ], 
+                [ 4, 0, 7, 6, 0, 9, 5, 8, 2 ] 
+                ]
+
 
 ## Available Scripts
 
