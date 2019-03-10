@@ -11,10 +11,22 @@ namespace SudokuWeb.Controllers
     [ApiController]
     public class SudokuSolverController : ControllerBase
     {
-       // GET api/values
+        // GET api/values
         [HttpPost("solve")]
         public JsonResult SolveSudoku(int?[,] input)
         {
+           //int[,] input = new int[,]
+           //             {
+           //     {0, 3, 6, 0, 5, 9, 0, 0, 0},
+           //     { 0, 0, 0, 0, 0, 0, 9, 0, 0 },
+           //     { 0, 0, 9, 0, 1, 0, 0, 7, 6 },
+           //     { 0, 0, 0, 0, 0, 7, 0, 8, 0 },
+           //     { 9, 0, 7, 0, 0, 0, 1, 0, 4 },
+           //     { 0, 5, 0, 8, 0, 0, 0, 0, 0 },
+           //     { 4, 6, 0, 0, 3, 0, 5, 0, 0 },
+           //     { 0, 0, 2, 0, 0, 0, 0, 0, 0 },
+           //     { 0, 0, 0, 7, 2, 0, 8, 4, 0 }
+           //     };
             SolveSudoku(input, 0, 0);
             return new JsonResult(input);
         }
