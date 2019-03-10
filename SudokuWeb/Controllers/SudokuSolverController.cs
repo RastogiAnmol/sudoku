@@ -17,7 +17,7 @@ namespace SudokuWeb.Controllers
         {
             if (null != input)
             {
-                SolveSudoku(input, 0, 0);
+                GetSolvedSudoku(input, 0, 0);
                 return new JsonResult(input);
             }
 
@@ -25,54 +25,54 @@ namespace SudokuWeb.Controllers
 
         }
 
-        private static bool SolveSudoku(int?[,] puzzle, int row, int col)
+        private static int?[,] GetSolvedSudoku(int?[,] puzzle, int gridRow, int gridCol)
         {
-            if (row < 9 && col < 9)
+            if (gridRow < 9 && gridCol < 9)
             {
-                if (puzzle[row, col] != 0)
+                if (puzzle[gridRow, gridCol] != null)
                 {
-                    if ((col + 1) < 9) return SolveSudoku(puzzle, row, col + 1);
-                    else if ((row + 1) < 9) return SolveSudoku(puzzle, row + 1, 0);
-                    else return true;
+                    if ((gridCol + 1) < 9) return GetSolvedSudoku(puzzle, gridRow, gridCol + 1);
+                    else if ((gridRow + 1) < 9) return GetSolvedSudoku(puzzle, gridRow + 1, 0);
+                    else return puzzle;
                 }
                 else
                 {
                     for (int i = 0; i < 9; ++i)
                     {
-                        if (IsAvailable(puzzle, row, col, i + 1))
+                        if (IsAvailable(puzzle, gridRow, gridCol, i + 1))
                         {
-                            puzzle[row, col] = i + 1;
+                            puzzle[gridRow, gridCol] = i + 1;
 
-                            if ((col + 1) < 9)
+                            if ((gridCol + 1) < 9)
                             {
-                                if (SolveSudoku(puzzle, row, col + 1)) return true;
-                                else puzzle[row, col] = 0;
+                                if (GetSolvedSudoku(puzzle, gridRow, gridCol + 1) != null) return puzzle;
+                                else puzzle[gridRow, gridCol] = null;
                             }
-                            else if ((row + 1) < 9)
+                            else if ((gridRow + 1) < 9)
                             {
-                                if (SolveSudoku(puzzle, row + 1, 0)) return true;
-                                else puzzle[row, col] = 0;
+                                if (GetSolvedSudoku(puzzle, gridRow + 1, 0) != null) return puzzle;
+                                else puzzle[gridRow, gridCol] = null;
                             }
-                            else return true;
+                            else return puzzle;
                         }
                     }
                 }
 
-                return false;
+                return null;
             }
-            else return true;
+            else return puzzle;
         }
 
-        private static bool IsAvailable(int?[,] puzzle, int row, int col, int num)
+        private static bool IsAvailable(int?[,] puzzle, int gridRow, int gridCol, int num)
         {
-            int rowStart = (row / 3) * 3;
-            int colStart = (col / 3) * 3;
+            int gridRowStart = (gridRow / 3) * 3;
+            int gridColStart = (gridCol / 3) * 3;
 
             for (int i = 0; i < 9; ++i)
             {
-                if (puzzle[row, i] == num) return false;
-                if (puzzle[i, col] == num) return false;
-                if (puzzle[rowStart + (i % 3), colStart + (i / 3)] == num) return false;
+                if (puzzle[gridRow, i] == num) return false;
+                if (puzzle[i, gridCol] == num) return false;
+                if (puzzle[gridRowStart + (i % 3), gridColStart + (i / 3)] == num) return false;
             }
 
             return true;
