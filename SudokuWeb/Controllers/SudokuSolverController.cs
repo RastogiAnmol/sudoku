@@ -15,11 +15,17 @@ namespace SudokuWeb.Controllers
         [HttpPost("solve")]
         public JsonResult SolveSudoku(int?[,] input)
         {
-            SolveSudoku(input, 0, 0);
-            return new JsonResult(input);
+            if (null != input)
+            {
+                SolveSudoku(input, 0, 0);
+                return new JsonResult(input);
+            }
+
+            return new JsonResult("no data was provided");
+
         }
 
-        public static bool SolveSudoku(int?[,] puzzle, int row, int col)
+        private static bool SolveSudoku(int?[,] puzzle, int row, int col)
         {
             if (row < 9 && col < 9)
             {
