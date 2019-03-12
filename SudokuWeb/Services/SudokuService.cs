@@ -7,63 +7,82 @@ namespace SudokuWeb.Services
 {
     public class SudokuService
     {
-        public static int?[,] GetSolvedSudoku(int?[,] puzzle)
+        private static int?[,] SudokuGrid { get; set; }
+        private static bool IsTheNumberInGridRow(int gridRow, int number)
         {
-          var solvedSudoku = GetSolvedSudoku(puzzle, 0, 0);
-          return solvedSudoku;
+            for (int i = 0; i < 9; i++)
+                if (SudokuGrid[gridRow, i] == number)
+                    return true;
+
+            return false;
         }
-
-        private static int?[,] GetSolvedSudoku(int?[,] puzzle, int gridRow, int gridCol)
+        private static bool IsTheNumberInGridCol(int gridCol, int number)
         {
-            if (gridRow < 9 && gridCol < 9)
-            {
-                if (puzzle[gridRow, gridCol] != null)
-                {
-                    if ((gridCol + 1) < 9) return GetSolvedSudoku(puzzle, gridRow, gridCol + 1);
-                    else if ((gridRow + 1) < 9) return GetSolvedSudoku(puzzle, gridRow + 1, 0);
-                    else return puzzle;
-                }
-                else
-                {
-                    for (int i = 0; i < 9; ++i)
-                    {
-                        if (IsAvailable(puzzle, gridRow, gridCol, i + 1))
-                        {
-                            puzzle[gridRow, gridCol] = i + 1;
+            for (int i = 0; i < 9; i++)
+                if (SudokuGrid[i, gridCol] == number)
+                    return true;
 
-                            if ((gridCol + 1) < 9)
+            return false;
+        }
+        private static bool IsTheNumberInThreeByThreeBox(int gridRow, int gridCol, int number)
+        {
+            int boxRow = gridRow - gridRow % 3;
+            int boxColumn = gridCol - gridCol % 3;
+
+            for (int i = boxRow; i < boxRow + 3; i++)
+            for (int j = boxColumn; j < boxColumn + 3; j++)
+                if (SudokuGrid[i,j] == number)
+                    return true;
+
+            return false;
+        }
+        private static bool IsTheNumberAtValidPosition(int gridRow, int gridCol, int number)
+        {
+            return !IsTheNumberInGridRow(gridRow, number) && !IsTheNumberInGridCol(gridCol, number) && !IsTheNumberInThreeByThreeBox(gridRow, gridCol, number);
+        }
+        private static bool IsSudokuSolvable()
+        {
+            for (int sudokuRow = 0; sudokuRow < 9; sudokuRow++)
+            {
+                for (int sudokuCol = 0; sudokuCol < 9; sudokuCol++)
+                {
+                    if (SudokuGrid[sudokuRow,sudokuCol] == null)
+                    {
+                        for (int number = 1; number <= 9; number++)
+                        {
+                            if (IsTheNumberAtValidPosition(sudokuRow, sudokuCol, number))
                             {
-                                if (GetSolvedSudoku(puzzle, gridRow, gridCol + 1) != null) return puzzle;
-                                else puzzle[gridRow, gridCol] = null;
+
+                                SudokuGrid[sudokuRow,sudokuCol] = number;
+
+                                if (IsSudokuSolvable())
+                                { 
+                                    return true;
+                                }
+                                else
+                                {
+                                    SudokuGrid[sudokuRow,sudokuCol] = null;
+                                }
                             }
-                            else if ((gridRow + 1) < 9)
-                            {
-                                if (GetSolvedSudoku(puzzle, gridRow + 1, 0) != null) return puzzle;
-                                else puzzle[gridRow, gridCol] = null;
-                            }
-                            else return puzzle;
                         }
+
+                        return false;
                     }
                 }
-
-                return null;
             }
-            else return puzzle;
+
+            return true; // sudoku solved
         }
 
-        private static bool IsAvailable(int?[,] puzzle, int gridRow, int gridCol, int num)
+        public static int?[,] GetSolvedSudoku(int?[,] input)
         {
-            int gridRowStart = (gridRow / 3) * 3;
-            int gridColStart = (gridCol / 3) * 3;
-
-            for (int i = 0; i < 9; ++i)
+            SudokuGrid = input;
+            if (IsSudokuSolvable())
             {
-                if (puzzle[gridRow, i] == num) return false;
-                if (puzzle[i, gridCol] == num) return false;
-                if (puzzle[gridRowStart + (i % 3), gridColStart + (i / 3)] == num) return false;
+                return SudokuGrid;
             }
 
-            return true;
+            return null;
         }
     }
 }

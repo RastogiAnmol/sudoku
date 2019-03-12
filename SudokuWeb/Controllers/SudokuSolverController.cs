@@ -1,4 +1,5 @@
 ﻿using System;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using SudokuWeb.Services;
 
@@ -9,6 +10,7 @@ namespace SudokuWeb.Controllers
     public class SudokuSolverController : ControllerBase
     {
         // GET api/values
+        [EnableCors("AnyOrigin")]
         [HttpPost("solve")]
         public JsonResult SolveSudoku(int?[,] input)
         {
